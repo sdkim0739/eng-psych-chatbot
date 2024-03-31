@@ -54,25 +54,56 @@ const ChatbotPage = ({ participantId, conditionId }) => {
   //   }
   // };
 
-  // Function to save interactions on the server
-  const saveSession = async () => {
-    try {
-      const response = await fetch('/api/server', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ participantId, conditionId, interactions: chatMessages }),
-      });
-      if (response.ok) {
-        console.log('Session saved successfully');
-      } else {
-        console.error('Error saving session');
-      }
-    } catch (error) {
-      console.error('Error saving session:', error);
-    }
+  const saveSession = () => {
+    // Convert interactions data to JSON object
+    const sessionData = {
+      participantId,
+      chatMessages,
+    };
+  
+    // Convert sessionData to JSON string
+    const jsonData = JSON.stringify(sessionData);
+  
+    // Create a Blob object with the JSON data
+    const blob = new Blob([jsonData], { type: 'application/json' });
+  
+    // Generate a temporary download link
+    const url = URL.createObjectURL(blob);
+  
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${participantId}.json`;
+  
+    // Append the link to the body and click it programmatically to trigger the download
+    document.body.appendChild(link);
+    link.click();
+  
+    // Cleanup: Remove the link element and revoke the Blob URL
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
+  
+
+  // // Function to save interactions on the server
+  // const saveSession = async () => {
+  //   try {
+  //     const response = await fetch('/api/server', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ participantId, conditionId, interactions: chatMessages }),
+  //     });
+  //     if (response.ok) {
+  //       console.log('Session saved successfully');
+  //     } else {
+  //       console.error('Error saving session');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error saving session:', error);
+  //   }
+  // };
 
   // Determine image based on condition ID
   const getImageForCondition = () => {
