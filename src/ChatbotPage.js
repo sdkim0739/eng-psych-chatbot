@@ -57,7 +57,7 @@ const ChatbotPage = ({ participantId, conditionId }) => {
   // Function to save interactions on the server
   const saveSession = async () => {
     try {
-      const response = await fetch('/api/save-session', {
+      const response = await fetch('/api/server', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
