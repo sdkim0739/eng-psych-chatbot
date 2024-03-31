@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import IntroductionPage from './IntroductionPage';
+import ChatbotPage from './ChatbotPage';
 
-function App() {
+const App = () => {
+  const [participantId, setParticipantId] = useState('');
+  const [conditionId, setConditionId] = useState('');
+  const [showChatbot, setShowChatbot] = useState(false);
+
+  const handleStartChat = (participantId, conditionId) => {
+    setParticipantId(participantId);
+    setConditionId(conditionId);
+    setShowChatbot(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {showChatbot ? (
+        <ChatbotPage participantId={participantId} conditionId={conditionId} />
+      ) : (
+        <IntroductionPage onStartChat={handleStartChat} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
