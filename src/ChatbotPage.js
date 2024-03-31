@@ -1,5 +1,6 @@
 // ChatbotPage.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './ChatbotPage.css'; // Import CSS file for styling
 
 const ChatbotPage = ({ participantId, conditionId }) => {
@@ -57,21 +58,31 @@ const ChatbotPage = ({ participantId, conditionId }) => {
   // Function to save interactions on the server
   const saveSession = async () => {
     try {
-      const response = await fetch('/api/save-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ participantId, conditionId, interactions: chatMessages }),
+      const response = await axios.post('/api/save-session', {
+        participantId,
+        conditionId,
+        interactions: chatMessages,
       });
-      if (response.ok) {
-        console.log('Session saved successfully');
-      } else {
-        console.error('Error saving session');
-      }
+      console.log('Session saved successfully');
     } catch (error) {
       console.error('Error saving session:', error);
     }
+    // try {
+    //   const response = await fetch('/api/save-session', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ participantId, conditionId, interactions: chatMessages }),
+    //   });
+    //   if (response.ok) {
+    //     console.log('Session saved successfully');
+    //   } else {
+    //     console.error('Error saving session');
+    //   }
+    // } catch (error) {
+    //   console.error('Error saving session:', error);
+    // }
   };
 
   // Determine image based on condition ID
