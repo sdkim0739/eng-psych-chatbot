@@ -1,0 +1,18 @@
+[
+  {
+    "sender": "user",
+    "message": "what's up"
+  },
+  {
+    "sender": "chatbot",
+    "message": "I'm here to help you with any questions or concerns you have about the quiz. If you need assistance, feel free to ask!"
+  },
+  {
+    "sender": "user",
+    "message": "what's the capital of australia"
+  },
+  {
+    "sender": "chatbot",
+    "message": "The capital of Australia is Canberra. If you have any other questions or need assistance with the quiz, feel free to ask!"
+  }
+]
