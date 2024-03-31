@@ -30,7 +30,7 @@ const ChatbotPage = ({ participantId, conditionId }) => {
       // Update chat messages state with the response from the chatbot
       setChatMessages((prevMessages) => [...prevMessages, { sender: 'chatbot', message: data.outputs["out-0"] }]);
       // Log interaction with the chatbot
-      logInteraction({ participantId, conditionId, input: inputText, response: data.outputs["out-0"] });
+      // logInteraction({ participantId, conditionId, input: inputText, response: data.outputs["out-0"] });
       // Clear input text after receiving response
       setInputText('');
     } catch (error) {
@@ -40,25 +40,24 @@ const ChatbotPage = ({ participantId, conditionId }) => {
     }
   };
 
-  // Function to log interactions and save them as JSON object
-  const logInteraction = async (interaction) => {
-    try {
-      // Fetch existing data from local storage
-      const existingData = JSON.parse(localStorage.getItem('interactions')) || [];
-      console.log(existingData);
-      // Append new interaction to existing data
-      const newData = [...existingData, interaction];
-      // Save updated data to local storage
-      localStorage.setItem('interactions', JSON.stringify(newData));
-    } catch (error) {
-      console.error('Error logging interaction:', error);
-    }
-  };
+  // // Function to log interactions and save them as JSON object
+  // const logInteraction = async (interaction) => {
+  //   try {
+  //     // Fetch existing data from local storage
+  //     const existingData = JSON.parse(localStorage.getItem('interactions')) || [];
+  //     // Append new interaction to existing data
+  //     const newData = [...existingData, interaction];
+  //     // Save updated data to local storage
+  //     localStorage.setItem('interactions', JSON.stringify(newData));
+  //   } catch (error) {
+  //     console.error('Error logging interaction:', error);
+  //   }
+  // };
 
   // Function to save interactions on the server
   const saveSession = async () => {
     try {
-      const response = await fetch('http://localhost:8080/save-session', {
+      const response = await fetch('/save-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
