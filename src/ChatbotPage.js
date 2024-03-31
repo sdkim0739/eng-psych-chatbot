@@ -1,6 +1,5 @@
 // ChatbotPage.js
 import React, { useState, useEffect } from 'react';
-import CSVLogger from './CSVLogger';
 import './ChatbotPage.css'; // Import CSS file for styling
 
 const ChatbotPage = ({ participantId, conditionId }) => {
@@ -17,21 +16,21 @@ const ChatbotPage = ({ participantId, conditionId }) => {
   const handleSendMessage = async () => {
     try {
       setIsLoading(true);
-      setChatMessages([...chatMessages, { sender: 'user', message: inputText }]);
+      setChatMessages((prevMessages) => [...prevMessages, { sender: 'user', message: inputText }]);
       const response = await fetch('https://www.stack-inference.com/inference/v0/run/06f12a25-5da8-441a-b5a6-29e67cd7545f/660710248f0d2009d391a362', {
         method: 'POST',
         headers: {
           'Authorization':'Bearer d85040f9-8ada-4e7b-b4a7-703623a6704f',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input: inputText }),
+        body: JSON.stringify({ "in-0": inputText, "user-id": participantId }),
       });
       const data = await response.json();
 
       // Update chat messages state with the response from the chatbot
-      setChatMessages([...chatMessages, { sender: 'chatbot', message: data.outputs["out-0"] }]);
+      setChatMessages((prevMessages) => [...prevMessages, { sender: 'chatbot', message: data.outputs["out-0"] }]);
       // Log interaction with the chatbot
-      logInteraction({ participantId, conditionId, input: inputText, response: data.message });
+      logInteraction({ participantId, conditionId, input: inputText, response: data.outputs["out-0"] });
       // Clear input text after receiving response
       setInputText('');
     } catch (error) {
@@ -41,16 +40,45 @@ const ChatbotPage = ({ participantId, conditionId }) => {
     }
   };
 
-  // Function to log interactions and save them as CSV
-  const logInteraction = (interaction) => {
-    // Add code to log interactions and save them as CSV
-    console.log(`Logging interaction: ${interaction}`);
+  // Function to log interactions and save them as JSON object
+  const logInteraction = async (interaction) => {
+    try {
+      // Fetch existing data from local storage
+      const existingData = JSON.parse(localStorage.getItem('interactions')) || [];
+      console.log(existingData);
+      // Append new interaction to existing data
+      const newData = [...existingData, interaction];
+      // Save updated data to local storage
+      localStorage.setItem('interactions', JSON.stringify(newData));
+    } catch (error) {
+      console.error('Error logging interaction:', error);
+    }
+  };
+
+  // Function to save interactions on the server
+  const saveSession = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/save-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ participantId, conditionId, interactions: chatMessages }),
+      });
+      if (response.ok) {
+        console.log('Session saved successfully');
+      } else {
+        console.error('Error saving session');
+      }
+    } catch (error) {
+      console.error('Error saving session:', error);
+    }
   };
 
   // Determine image based on condition ID
   const getImageForCondition = () => {
     // Example logic - you can replace this with your own
-    return (conditionId === '999' ||  conditionId === '998') ? '/jibo.png' : '/pepper.png';
+    return (conditionId === '1' ||  conditionId === '3') ? '/jibo.png' : '/pepper.png';
   };
 
   return (
@@ -77,8 +105,12 @@ const ChatbotPage = ({ participantId, conditionId }) => {
       />
       {/* Send button to send the message to the chatbot */}
       <button onClick={handleSendMessage} className="send-button">Send</button>
-      {/* CSVLogger component to log interactions */}
-      <CSVLogger participantId={participantId} conditionId={conditionId} interactions={chatMessages} />
+      {/* Save Session button */}
+      <button onClick={saveSession} style={{
+          position: 'absolute',
+          top: '10px', // Adjust the top offset as needed
+          right: '10px', // Adjust the right offset as needed
+        }}>End session</button>
     </div>
   );
 };
