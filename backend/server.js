@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.use(cors()); // Enable CORS for all routes
 
-app.post('/save-session', (req, res) => {
+app.post('/api/save-session', (req, res) => {
   const { participantId, interactions } = req.body;
   const fileName = `${participantId}.json`;
   const json = JSON.stringify(interactions, null, 2);
