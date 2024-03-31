@@ -1,10 +1,13 @@
 // server.js
 const express = require('express');
 const fs = require('fs');
+const cors = require('cors');
 const app = express();
 const port = 8080;
 
 app.use(express.json());
+
+app.use(cors()); // Enable CORS for all routes
 
 app.post('/save-session', (req, res) => {
   const { participantId, interactions } = req.body;
