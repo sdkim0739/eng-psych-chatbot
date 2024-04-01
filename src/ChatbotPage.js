@@ -108,7 +108,7 @@ const ChatbotPage = ({ participantId, conditionId }) => {
   // Determine image based on condition ID
   const getImageForCondition = () => {
     // Example logic - you can replace this with your own
-    return (conditionId === '1' ||  conditionId === '3') ? '/jibo.png' : '/pepper.png';
+    return (conditionId === '1' ||  conditionId === '2') ? '/jibo.png' : '/pepper.png';
   };
 
   return (
